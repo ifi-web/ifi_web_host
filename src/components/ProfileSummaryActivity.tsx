@@ -1,21 +1,27 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import Icons from "@/assets/Icons/Index";
 import { Separator } from "@/components/ui/separator";
 import ProductCard from "@/components/ProductCard";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 
+interface Product {
+  id: number;
+  title: string;
+  image: string;
+  price: number;
+  description: string; // Add this line to define 'description'
+  warehouse_status: "in_stock" | "limited" | "out_of_stock"; // Correctly typed warehouse_status
+  cart: any[]; // Adjust the type based on the structure of the cart
+}
+
 export default function ProfileSummaryActivity() {
-  const [products, setProducts] = useState([]);
-  const [cartItems, setCartItems] = useState([]);
+  const [products, setProducts] = useState<Product[]>([]);
 
   useEffect(() => {
     fetch("http://localhost:8000/api/products/") // Fetch from the updated API endpoint
       .then((response) => response.json())
       .then((data) => {
         setProducts(data); // Store the entire product list from the API
-        const userCart =
-          data.find((product) => product.title === "loq2024")?.cart || []; // Example condition for the user cart (you can change it as needed)
-        setCartItems(userCart);
       })
       .catch((error) => console.error("Error fetching products:", error));
   }, []);
@@ -80,7 +86,6 @@ export default function ProfileSummaryActivity() {
                 title={product.title}
                 image={product.image}
                 price={product.price}
-                description={product.description}
                 warehouseStatus={product.warehouse_status} // Directly use warehouse_status from API
               />
             ))}

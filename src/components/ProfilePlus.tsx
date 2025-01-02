@@ -1,13 +1,20 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import Icons from "@/assets/Icons/Index";
 import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
 import ShinyPlusButton from "./ui/ShinyPlusButton";
 import axios from "axios"; // For making API requests
 
+// Define the type for the profile data
+interface ProfileData {
+  is_premium: boolean;
+  wallet_balance: number;
+  buy_score: number;
+}
+
 export default function ProfilePlus() {
-  // State to store profile data
-  const [profileData, setProfileData] = useState(null);
+  // State to store profile data with defined type
+  const [profileData, setProfileData] = useState<ProfileData | null>(null);
 
   // State to track loading state
   const [loading, setLoading] = useState(true);

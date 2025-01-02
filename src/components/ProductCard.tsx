@@ -1,7 +1,19 @@
 import Icons from "@/assets/Icons/Index";
 import ShinyButtonCart from "@/components/ui/ShinyButtonCart";
 
-export default function ProductCard({ title, image, price, warehouseStatus }) {
+interface ProductCardProps {
+  title: string;
+  image: string;
+  price: number;
+  warehouseStatus: "in_stock" | "limited" | "out_of_stock";
+}
+
+export default function ProductCard({
+  title,
+  image,
+  price,
+  warehouseStatus,
+}: ProductCardProps) {
   return (
     <div className="ProductCard flex flex-col items-center text-center justify-center border-x-[1px] p-3 h-[16rem]">
       <img

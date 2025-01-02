@@ -19,6 +19,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "./AuthContext";
 import Cookies from "js-cookie";
 
+// Define schema using Zod
 const formSchema = z.object({
   username: z
     .string()
@@ -30,10 +31,21 @@ const formSchema = z.object({
     .max(50),
 });
 
+// Define the type for the form values
+type FormValues = z.infer<typeof formSchema>;
+
 const Login: React.FC = () => {
   const navigate = useNavigate();
-  const { setUser } = useAuth();
-  const form = useForm({
+  const authContext = useAuth();
+
+  // Handle case where context is null
+  if (!authContext) {
+    return <div>Loading...</div>; // or some other fallback
+  }
+
+  const { setUser } = authContext;
+
+  const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       username: "",
@@ -41,7 +53,7 @@ const Login: React.FC = () => {
     },
   });
 
-  const onSubmit = async (values) => {
+  const onSubmit = async (values: FormValues) => {
     try {
       const response = await axios.post("http://localhost:8000/api/login/", {
         username: values.username,
