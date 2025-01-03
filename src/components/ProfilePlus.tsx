@@ -60,11 +60,9 @@ const PlusCardHeader: React.FC<PlusCardHeaderProps> = ({
 
       const remainingTimeMillis = endDate.getTime() - now.getTime();
 
-      // Using the algorithm you suggested
       if (remainingTimeMillis <= 0) {
         setRemainingTime("زمان اشتراک شما به پایان رسیده است");
       } else {
-        const remainingTime = new Date(remainingTimeMillis);
         const remainingDays = Math.floor(
           remainingTimeMillis / (1000 * 3600 * 24),
         );
@@ -77,7 +75,6 @@ const PlusCardHeader: React.FC<PlusCardHeaderProps> = ({
 
         let timeString = "";
 
-        // Only show days if remaining days > 0
         if (remainingDays > 0) {
           timeString += `${remainingDays} روز `;
         }

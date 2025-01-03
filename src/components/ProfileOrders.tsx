@@ -18,13 +18,6 @@ const orderComponents = {
   cancelled: ProfileCancelledOrder,
 };
 
-type ProductCardProps = {
-  title: string;
-  image: string;
-  price: number;
-  warehouseStatus: string;
-};
-
 export default function ProfileOrders() {
   const [activeTab, setActiveTab] = useState<OrderTab>("current");
   const [isLoading, setIsLoading] = useState(true);
@@ -63,12 +56,25 @@ export default function ProfileOrders() {
       });
 
       const userProducts =
-        profile.cart?.map((product: any) => ({
-          title: product.title,
-          image: product.image,
-          price: product.price,
-          warehouseStatus: product.warehouseStatus,
-        })) || [];
+        profile.cart?.map((product: any) => {
+          // Ensure warehouseStatus is one of the valid types
+          const validWarehouseStatuses: (
+            | "in_stock"
+            | "limited"
+            | "out_of_stock"
+          )[] = ["in_stock", "limited", "out_of_stock"];
+          const warehouseStatus: "in_stock" | "limited" | "out_of_stock" =
+            validWarehouseStatuses.includes(product.warehouse_status)
+              ? product.warehouse_status
+              : "out_of_stock"; // Fallback to "out_of_stock" if invalid status
+
+          return {
+            title: product.title,
+            image: product.image,
+            price: product.price,
+            warehouseStatus, // Safely assign the warehouseStatus
+          };
+        }) || [];
       setProducts(userProducts);
     } catch (error) {
       console.error("Error fetching orders data:", error);
@@ -81,8 +87,6 @@ export default function ProfileOrders() {
   useEffect(() => {
     fetchData();
   }, []);
-
-  const OrderComponent = orderComponents[activeTab];
 
   const tabs = [
     { label: "جاری", value: "current" },
@@ -150,7 +154,6 @@ export default function ProfileOrders() {
             ))}
           </div>
         ) : null}
-        {OrderComponent && <OrderComponent />}
       </div>
     </div>
   );
