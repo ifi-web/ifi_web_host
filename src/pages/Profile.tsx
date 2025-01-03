@@ -37,7 +37,6 @@ interface ProfileProps {
 }
 
 const ProfileLinks: React.FC<ProfileProps> = ({
-  // activeComponent,
   handleSummaryClick,
   handlePlusClick,
   handleOrdersClick
@@ -114,7 +113,7 @@ export default function Profile() {
     if (!user) return;
 
     axios
-      .get("https://amirabbasixi234.pythonanywhere.com/api/profiles/", {
+      .get("http://localhost:8000/api/profiles/", {
         headers: {
           Authorization: `Bearer ${user.token}`
         }
@@ -241,7 +240,7 @@ export default function Profile() {
 
         {activeComponent === "summary" && <ProfileSummaryActivity />}
         {activeComponent === "plus" && <ProfilePlus />}
-        {activeComponent === "plus" && <ProfileOrders />}
+        {activeComponent === "orders" && <ProfileOrders />}
       </div>
     </ScrollArea>
   );

@@ -1,10 +1,11 @@
-import Icons from "@/assets/Icons/Index";
-import { Separator } from "@/components/ui/separator";
-import { Button } from "@/components/ui/button";
-import ShinyPlusButton from "./ui/ShinyPlusButton";
 import React, { useEffect, useState } from "react";
-import axios from "axios";
+import axios from "axios"; // <-- Import axios
 import { Progress } from "@/components/ui/progress";
+import ShinyPlusButton from "./ui/ShinyPlusButton";
+import { Button } from "@/components/ui/button";
+import { Separator } from "@/components/ui/separator";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import Icons from "@/assets/Icons/Index";
 
 interface ArrowLeftIconProps {
   className?: string;
@@ -25,27 +26,93 @@ const ArrowLeftIcon: React.FC<ArrowLeftIconProps> = ({ className }) => {
     </svg>
   );
 };
+
 interface PlusCardHeaderProps {
   isPremium: boolean;
-  // SubscriptionDate: string;    Caculate the date with progress and add for progres value={?}
-  // SubscriptionStart: string;
-  // SubscriptionEnd: string;
-  // Replace the Date with actual value {?}
+  profileData?: ProfileData | null;
 }
 
-const PlusCardHeader: React.FC<PlusCardHeaderProps> = ({ isPremium }) => {
+const PlusCardHeader: React.FC<PlusCardHeaderProps> = ({
+  isPremium,
+  profileData,
+}) => {
+  const [progress, setProgress] = useState(0);
+  const [remainingTime, setRemainingTime] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (
+      isPremium &&
+      profileData?.premium_start_date &&
+      profileData?.premium_end_date
+    ) {
+      const startDate = new Date(profileData.premium_start_date);
+      const endDate = new Date(profileData.premium_end_date);
+      const now = new Date();
+
+      const totalDuration = endDate.getTime() - startDate.getTime();
+      const elapsedTime = now.getTime() - startDate.getTime();
+      const progressPercentage = Math.min(
+        (elapsedTime / totalDuration) * 100,
+        100,
+      );
+
+      setProgress(progressPercentage);
+
+      const remainingTimeMillis = endDate.getTime() - now.getTime();
+
+      // Using the algorithm you suggested
+      if (remainingTimeMillis <= 0) {
+        setRemainingTime("زمان اشتراک شما به پایان رسیده است");
+      } else {
+        const remainingTime = new Date(remainingTimeMillis);
+        const remainingDays = Math.floor(
+          remainingTimeMillis / (1000 * 3600 * 24),
+        );
+        const remainingHours = Math.floor(
+          (remainingTimeMillis % (1000 * 3600 * 24)) / (1000 * 3600),
+        );
+        const remainingMinutes = Math.floor(
+          (remainingTimeMillis % (1000 * 3600)) / (1000 * 60),
+        );
+
+        let timeString = "";
+
+        // Only show days if remaining days > 0
+        if (remainingDays > 0) {
+          timeString += `${remainingDays} روز `;
+        }
+
+        timeString += `${remainingHours} ساعت ${remainingMinutes} دقیقه`;
+
+        setRemainingTime(timeString);
+      }
+    }
+  }, [isPremium, profileData]);
+
   return (
     <div className="PlusCard flex flex-col justify-start items-start text-start px-6 py-4 border-[1px] rounded-lg">
       {isPremium ? (
-        <div className="">
+        <div>
           <h1 className="mb-4">اشتراک ویژه شما فعال است</h1>
-          <h2 className="text-xs mb-2">روزهای باقی‌مانده : Date</h2>
+          <h2 className="text-xs mb-2">
+            زمان باقی‌مانده : {remainingTime || "در حال بارگیری..."}
+          </h2>
           <div className="w-full">
-            <Progress value={70} />
+            <Progress value={100 - progress} />
           </div>
           <div className="flex flex-row mt-3">
-            <h3 className="text-xs text-zinc-500 ml-5">شروع : Date</h3>
-            <h3 className="text-xs text-zinc-500">انقضا : Date</h3>
+            <h3 className="text-xs text-zinc-500 ml-5">
+              شروع :{" "}
+              {profileData?.premium_start_date
+                ? new Date(profileData.premium_start_date).toLocaleDateString()
+                : ""}
+            </h3>
+            <h3 className="text-xs text-zinc-500">
+              انقضا :{" "}
+              {profileData?.premium_end_date
+                ? new Date(profileData.premium_end_date).toLocaleDateString()
+                : ""}
+            </h3>
           </div>
         </div>
       ) : (
@@ -67,7 +134,7 @@ interface ActivitySummaryProps {
 const ActivitySummary: React.FC<ActivitySummaryProps> = ({
   iconSrc,
   amount,
-  description
+  description,
 }) => {
   return (
     <div className="flex items-center text-start my-1">
@@ -110,6 +177,8 @@ interface ProfileData {
   is_premium: boolean;
   wallet_balance: number;
   buy_score: number;
+  premium_start_date: string;
+  premium_end_date: string;
 }
 
 export default function ProfilePlus() {
@@ -122,9 +191,7 @@ export default function ProfilePlus() {
       setIsLoading(true);
       setFetchError(null);
       try {
-        const response = await axios.get(
-          "https://amirabbasixi234.pythonanywhere.com/api/profiles/"
-        );
+        const response = await axios.get("http://localhost:8000/api/profiles/");
         if (response.data.length > 0) {
           setProfileData(response.data[0]);
         } else {
@@ -142,11 +209,25 @@ export default function ProfilePlus() {
   }, []);
 
   if (isLoading) {
-    return <div>Loading...</div>;
+    return (
+      <div className="fixed inset-0 flex items-center justify-center backdrop-blur-lg">
+        <Alert className="w-fit">
+          <AlertTitle className="m-auto">در حال بارگیری...</AlertTitle>
+        </Alert>
+      </div>
+    );
   }
   if (fetchError) {
-    return <div className="text-red-500">{fetchError}</div>;
+    return (
+      <div className="fixed inset-0 flex items-center justify-center backdrop-blur-lg">
+        <Alert className="w-fit text-red-600">
+          <AlertTitle className="m-auto">خطا</AlertTitle>
+          <AlertDescription className="m-auto">{fetchError}</AlertDescription>
+        </Alert>
+      </div>
+    );
   }
+
   return (
     <div className="LeftGrid grid h-0 col-span-4 mx-4 ml-4">
       <div className="border-[1px] rounded-xl p-4 my-2">
@@ -154,7 +235,10 @@ export default function ProfilePlus() {
           <h1 className="flex px-1">اشتراک ویژه پلاس</h1>
         </div>
         <div className="flex justify-start text-start items-start mt-5">
-          <PlusCardHeader isPremium={profileData?.is_premium || false} />
+          <PlusCardHeader
+            isPremium={profileData?.is_premium || false}
+            profileData={profileData}
+          />
         </div>
       </div>
       <h1 className="my-3">جمع‌بندی فعالیت‌های شما در پلاس تا کنون</h1>

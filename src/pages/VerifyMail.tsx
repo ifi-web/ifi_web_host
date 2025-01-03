@@ -50,7 +50,7 @@ const OTPForm: React.FC<OTPFormProps> = () => {
 
     const handleSendCode = async () => {
       try {
-        await axios.post("https://amirabbasixi234.pythonanywhere.com/api/send-verification-code/", {
+        await axios.post("http://localhost:8000/api/send-verification-code/", {
           email
         });
       } catch (error) {
@@ -86,7 +86,7 @@ const OTPForm: React.FC<OTPFormProps> = () => {
   const onSubmit = async (data: z.infer<typeof FormSchema>) => {
     setLoading(true);
     try {
-      await axios.post("https://amirabbasixi234.pythonanywhere.com/api/verify-code/", {
+      await axios.post("http://localhost:8000/api/verify-code/", {
         email,
         code: data.pin
       });

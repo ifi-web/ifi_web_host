@@ -53,7 +53,7 @@ const Login: React.FC = () => {
   const onSubmit = async (values: FormValues) => {
     try {
       const response = await axios.post(
-        "https://amirabbasixi234.pythonanywhere.com/api/login/",
+        "http://localhost:8000/api/login/",
         {
           username: values.username,
           password: values.password,

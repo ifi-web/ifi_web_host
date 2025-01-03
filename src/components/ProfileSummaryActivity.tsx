@@ -3,6 +3,7 @@ import { Separator } from "@/components/ui/separator";
 import ProductCard from "@/components/ProductCard";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { useEffect, useState } from "react";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 
 const ArrowLeftIcon = ({ className }: { className?: string }) => (
   <svg
@@ -50,7 +51,7 @@ function SummaryCard({
   thirdIconSrc,
   currentOrdersStatus,
   returnedOrdersStatus,
-  deliveredOrdersStatus
+  deliveredOrdersStatus,
 }: SummaryCardProps) {
   return (
     <div className="border-[1px] rounded-xl p-4 my-2">
@@ -128,7 +129,7 @@ export default function ProfileSummaryActivity() {
       setIsLoading(true);
       setFetchError(null);
       try {
-        const response = await fetch("https://amirabbasixi234.pythonanywhere.com/api/products/");
+        const response = await fetch("http://localhost:8000/api/products/");
         if (!response.ok) {
           throw new Error(`HTTP error! Status: ${response.status}`);
         }
@@ -146,11 +147,23 @@ export default function ProfileSummaryActivity() {
   }, []);
 
   if (isLoading) {
-    return <div>Loading products...</div>;
+    return (
+      <div className="fixed inset-0 flex items-center justify-center backdrop-blur-lg">
+        <Alert className="w-fit">
+          <AlertTitle className="m-auto">در حال بارگیری...</AlertTitle>
+        </Alert>
+      </div>
+    );
   }
-
   if (fetchError) {
-    return <div className="text-red-500">{fetchError}</div>;
+    return (
+      <div className="fixed inset-0 flex items-center justify-center backdrop-blur-lg">
+        <Alert className="w-fit text-red-600">
+          <AlertTitle className="m-auto">خطا</AlertTitle>
+          <AlertDescription className="m-auto">{fetchError}</AlertDescription>
+        </Alert>
+      </div>
+    );
   }
 
   return (
