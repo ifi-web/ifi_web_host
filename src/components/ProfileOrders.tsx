@@ -18,6 +18,13 @@ const orderComponents = {
   cancelled: ProfileCancelledOrder,
 };
 
+type ProductCardProps = {
+  title: string;
+  image: string;
+  price: number;
+  warehouseStatus: string;
+};
+
 export default function ProfileOrders() {
   const [activeTab, setActiveTab] = useState<OrderTab>("current");
   const [isLoading, setIsLoading] = useState(true);
@@ -75,7 +82,7 @@ export default function ProfileOrders() {
     fetchData();
   }, []);
 
-  const OrderComponent = orderComponents[activeTab] || (() => null);
+  const OrderComponent = orderComponents[activeTab];
 
   const tabs = [
     { label: "جاری", value: "current" },
@@ -143,6 +150,7 @@ export default function ProfileOrders() {
             ))}
           </div>
         ) : null}
+        {OrderComponent && <OrderComponent />}
       </div>
     </div>
   );
