@@ -113,7 +113,7 @@ export default function Profile() {
     if (!user) return;
 
     axios
-      .get("http://localhost:8000/api/profiles/", {
+      .get("https://amirabbasixi234.pythonanywhere.com/api/profiles/", {
         headers: {
           Authorization: `Bearer ${user.token}`
         }

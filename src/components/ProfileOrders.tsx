@@ -2,21 +2,28 @@ import ProductCard from "@/components/ProductCard";
 import Icons from "@/assets/Icons/Index";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import ProfileCurrentOrder from "@/components/ProfileOrder/ProfileCurrentOrder";
-import ProfileDeliveredOrder from "@/components/ProfileOrder/ProfileDeliveredOrder";
-import ProfileReturnedOrder from "@/components/ProfileOrder/ProfileReturnedOrder";
-import ProfileCancelledOrder from "@/components/ProfileOrder/ProfileCancelledOrder";
+// import ProfileCurrentOrder from "@/components/ProfileOrder/ProfileCurrentOrder";
+// import ProfileDeliveredOrder from "@/components/ProfileOrder/ProfileDeliveredOrder";
+// import ProfileReturnedOrder from "@/components/ProfileOrder/ProfileReturnedOrder";
+// import ProfileCancelledOrder from "@/components/ProfileOrder/ProfileCancelledOrder";
 import { useState, useEffect } from "react";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 
+type ProductCardProps = {
+  title: string;
+  image: string;
+  price: number;
+  warehouseStatus: "in_stock" | "limited" | "out_of_stock";
+};
+
 type OrderTab = "current" | "delivered" | "returned" | "cancelled";
 
-const orderComponents = {
-  current: ProfileCurrentOrder,
-  delivered: ProfileDeliveredOrder,
-  returned: ProfileReturnedOrder,
-  cancelled: ProfileCancelledOrder,
-};
+// const orderComponents = {
+//   current: ProfileCurrentOrder,
+//   delivered: ProfileDeliveredOrder,
+//   returned: ProfileReturnedOrder,
+//   cancelled: ProfileCancelledOrder,
+// };
 
 export default function ProfileOrders() {
   const [activeTab, setActiveTab] = useState<OrderTab>("current");
@@ -36,7 +43,7 @@ export default function ProfileOrders() {
     setIsLoading(true);
     setFetchError(null);
     try {
-      const response = await fetch("http://localhost:8000/api/profiles/");
+      const response = await fetch("https://amirabbasixi234.pythonanywhere.com/api/profiles/");
       if (!response.ok) {
         throw new Error("Failed to fetch profiles data");
       }
@@ -57,7 +64,6 @@ export default function ProfileOrders() {
 
       const userProducts =
         profile.cart?.map((product: any) => {
-          // Ensure warehouseStatus is one of the valid types
           const validWarehouseStatuses: (
             | "in_stock"
             | "limited"
@@ -66,13 +72,13 @@ export default function ProfileOrders() {
           const warehouseStatus: "in_stock" | "limited" | "out_of_stock" =
             validWarehouseStatuses.includes(product.warehouse_status)
               ? product.warehouse_status
-              : "out_of_stock"; // Fallback to "out_of_stock" if invalid status
+              : "out_of_stock";
 
           return {
             title: product.title,
             image: product.image,
             price: product.price,
-            warehouseStatus, // Safely assign the warehouseStatus
+            warehouseStatus,
           };
         }) || [];
       setProducts(userProducts);

@@ -188,7 +188,7 @@ export default function ProfilePlus() {
       setIsLoading(true);
       setFetchError(null);
       try {
-        const response = await axios.get("http://localhost:8000/api/profiles/");
+        const response = await axios.get("https://amirabbasixi234.pythonanywhere.com/api/profiles/");
         if (response.data.length > 0) {
           setProfileData(response.data[0]);
         } else {

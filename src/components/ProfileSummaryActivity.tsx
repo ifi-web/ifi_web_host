@@ -129,7 +129,7 @@ export default function ProfileSummaryActivity() {
       setIsLoading(true);
       setFetchError(null);
       try {
-        const response = await fetch("http://localhost:8000/api/products/");
+        const response = await fetch("https://amirabbasixi234.pythonanywhere.com/api/products/");
         if (!response.ok) {
           throw new Error(`HTTP error! Status: ${response.status}`);
         }
