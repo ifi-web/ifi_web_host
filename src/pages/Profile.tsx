@@ -11,6 +11,7 @@ import axios from "axios";
 
 import ProfileSummaryActivity from "@/components/ProfileSummaryActivity";
 import ProfilePlus from "@/components/ProfilePlus.tsx";
+import ProfileOrders from "@/components/ProfileOrders.tsx";
 
 interface User {
   id: string;
@@ -25,19 +26,21 @@ interface User {
   gmail: string;
 }
 
-type ActiveComponent = "summary" | "plus" | null;
+type ActiveComponent = "summary" | "plus" | "orders" | null;
 
 interface ProfileProps {
   profile: User | null;
   activeComponent: ActiveComponent;
   handleSummaryClick: () => void;
   handlePlusClick: () => void;
+  handleOrdersClick: () => void;
 }
 
 const ProfileLinks: React.FC<ProfileProps> = ({
   // activeComponent,
   handleSummaryClick,
   handlePlusClick,
+  handleOrdersClick
 }) => (
   <div className="Links flex flex-col justify-start items-start -mr-3">
     <Button variant="link" className="my-1" onClick={handleSummaryClick}>
@@ -58,7 +61,7 @@ const ProfileLinks: React.FC<ProfileProps> = ({
       پلاس
     </Button>
 
-    <Button variant="link" className="my-1">
+    <Button variant="link" className="my-1" onClick={handleOrdersClick}>
       <img className="AuthIcon size-7" src={Icons.Bag} alt="" />
       سفارش‌ها
     </Button>
@@ -113,12 +116,12 @@ export default function Profile() {
     axios
       .get("https://amirabbasixi234.pythonanywhere.com/api/profiles/", {
         headers: {
-          Authorization: `Bearer ${user.token}`,
-        },
+          Authorization: `Bearer ${user.token}`
+        }
       })
       .then((response) => {
         const userProfile = response.data.find(
-          (profile: User) => profile.username === user.username,
+          (profile: User) => profile.username === user.username
         );
         setProfile(userProfile);
       })
@@ -126,7 +129,7 @@ export default function Profile() {
         console.error(
           "Error fetching profile data:",
           error.message,
-          error?.response?.status,
+          error?.response?.status
         );
       });
   }, [user]);
@@ -143,6 +146,10 @@ export default function Profile() {
 
   const handlePlusClick = () => {
     setActiveComponent((prev) => (prev === "plus" ? null : "plus"));
+  };
+
+  const handleOrdersClick = () => {
+    setActiveComponent((prev) => (prev === "orders" ? null : "orders"));
   };
 
   if (!memoizedProfile) {
@@ -226,6 +233,7 @@ export default function Profile() {
             activeComponent={activeComponent}
             handleSummaryClick={handleSummaryClick}
             handlePlusClick={handlePlusClick}
+            handleOrdersClick={handleOrdersClick}
           />
         </div>
 
@@ -233,6 +241,7 @@ export default function Profile() {
 
         {activeComponent === "summary" && <ProfileSummaryActivity />}
         {activeComponent === "plus" && <ProfilePlus />}
+        {activeComponent === "plus" && <ProfileOrders />}
       </div>
     </ScrollArea>
   );
