@@ -7,7 +7,7 @@ import {
   useScroll,
   useSpring,
   useTransform,
-  useVelocity,
+  useVelocity
 } from "framer-motion";
 import React, { useEffect, useRef, useState } from "react";
 
@@ -39,11 +39,11 @@ function ParallaxText({
   const scrollVelocity = useVelocity(scrollY);
   const smoothVelocity = useSpring(scrollVelocity, {
     damping: 50,
-    stiffness: 400,
+    stiffness: 400
   });
 
   const velocityFactor = useTransform(smoothVelocity, [0, 1000], [0, 5], {
-    clamp: false,
+    clamp: false
   });
 
   const [repetitions, setRepetitions] = useState(1);
@@ -69,8 +69,7 @@ function ParallaxText({
   const x = useTransform(baseX, (v) => `${wrap(-100 / repetitions, 0, v)}%`);
 
   const directionFactor = React.useRef<number>(1);
-
-  useAnimationFrame((_, delta) => {
+  useAnimationFrame((t, delta) => {
     let moveBy = directionFactor.current * baseVelocity * (delta / 1000);
 
     if (velocityFactor.get() < 0) {
@@ -112,7 +111,7 @@ export function VelocityScroll({
     <div
       className={cn(
         "relative w-full text-4xl font-bold tracking-[-0.02em] md:text-7xl md:leading-[5rem]",
-        className,
+        className
       )}
       {...props}
     >

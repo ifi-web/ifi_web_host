@@ -1,24 +1,16 @@
-import * as React from "react";
-import {
-  createContext,
-  useContext,
-  useState,
-  useEffect,
-  ReactNode,
-} from "react";
+import React, { createContext, useContext, useState, useEffect } from "react";
 import Cookies from "js-cookie";
 
-const AuthContext = createContext<{
-  user: any;
-  setUser: React.Dispatch<React.SetStateAction<any>>;
-} | null>(null);
+const AuthContext = createContext<
+  { user: any; setUser: React.Dispatch<React.SetStateAction<any>> } | undefined
+>(undefined);
 
 interface AuthProviderProps {
-  children: ReactNode;
+  children: React.ReactNode;
 }
 
-export const AuthProvider = ({ children }: AuthProviderProps) => {
-  const [user, setUser] = useState<any>(null);
+export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
+  const [user, setUser] = useState(null);
 
   useEffect(() => {
     const storedUser = Cookies.get("user");

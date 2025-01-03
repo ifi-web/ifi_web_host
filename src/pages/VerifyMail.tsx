@@ -11,24 +11,27 @@ import {
   FormField,
   FormItem,
   FormLabel,
-  FormMessage,
+  FormMessage
 } from "@/components/ui/form";
 import {
   InputOTP,
   InputOTPGroup,
-  InputOTPSlot,
+  InputOTPSlot
 } from "@/components/ui/input-otp";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import axios from "axios";
+import axios, { AxiosError } from "axios";
+import React from "react";
 
 const FormSchema = z.object({
   pin: z.string().min(6, {
-    message: "حداقل کد وارد شده باید 6 کاراکتر باشد",
-  }),
+    message: "حداقل کد وارد شده باید 6 کاراکتر باشد"
+  })
 });
 
-export function InputOTPForm() {
+interface OTPFormProps {}
+
+const OTPForm: React.FC<OTPFormProps> = () => {
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [countdown, setCountdown] = useState(5);
   const [loading, setLoading] = useState(false);
@@ -38,8 +41,8 @@ export function InputOTPForm() {
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
-      pin: "",
-    },
+      pin: ""
+    }
   });
 
   useEffect(() => {
@@ -47,17 +50,18 @@ export function InputOTPForm() {
 
     const handleSendCode = async () => {
       try {
-        await axios.post(
-          "https://amirabbasixi234.pythonanywhere.com/api/send-verification-code/",
-          {
-            email,
-          },
-        );
+        await axios.post("https://amirabbasixi234.pythonanywhere.com/api/send-verification-code/", {
+          email
+        });
       } catch (error) {
-        // nothing
+        console.error("Failed to send verification code:", error);
+        toast({
+          variant: "destructive",
+          title: "خطا",
+          description: "مشکلی در ارسال کد تایید وجود دارد."
+        });
       }
     };
-
     handleSendCode();
   }, [email]);
 
@@ -82,21 +86,26 @@ export function InputOTPForm() {
   const onSubmit = async (data: z.infer<typeof FormSchema>) => {
     setLoading(true);
     try {
-      await axios.post(
-        "https://amirabbasixi234.pythonanywhere.com/api/verify-code/",
-        {
-          email,
-          code: data.pin,
-        },
-      );
+      await axios.post("https://amirabbasixi234.pythonanywhere.com/api/verify-code/", {
+        email,
+        code: data.pin
+      });
       setIsSubmitted(true);
       toast({
         variant: "default",
         title: "کد با موفقیت ارسال شد",
         description: "شما به‌زودی از صفحه خارج خواهید شد",
-        action: <ToastAction altText="Try again">باشه</ToastAction>,
+        action: <ToastAction altText="Try again">باشه</ToastAction>
       });
-    } catch (error) {
+    } catch (error: any) {
+      const axiosError = error as AxiosError;
+      toast({
+        variant: "destructive",
+        title: "خطا",
+        description:
+          (axiosError.response?.data as { message?: string })?.message ||
+          "مشکلی در ارسال کد تایید وجود دارد."
+      });
     } finally {
       setLoading(false);
     }
@@ -106,7 +115,7 @@ export function InputOTPForm() {
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(onSubmit)}
-        className="Form backdrop-blur-[50px] rounded-2xl space-y-4 flex flex-col m-auto p-8"
+        className="backdrop-blur-[50px] rounded-2xl space-y-4 flex flex-col m-auto p-8"
       >
         <FormField
           control={form.control}
@@ -141,9 +150,9 @@ export function InputOTPForm() {
           {loading ? "در حال بررسی..." : "ثبت کد"}
         </ShinyButtonGreen>
         {isSubmitted && (
-          <h1 className="VerifyIco text-[--text-color-pr] text-sm">
+          <h1 className="text-[--text-color-pr] text-sm">
             ایمیل شما با موفقیت تایید شد
-            <h2 className="VerifyIco text-[--text-color-pr] text-xs my-1">
+            <h2 className="text-[--text-color-pr] text-xs my-1">
               خروج در {countdown} ثانیه دیگر
             </h2>
           </h1>
@@ -151,12 +160,12 @@ export function InputOTPForm() {
       </form>
     </Form>
   );
-}
+};
 
 export default function VerifyMail() {
   return (
     <div className="flex justify-center items-center text-center h-[70vh]">
-      <InputOTPForm />
+      <OTPForm />
     </div>
   );
 }

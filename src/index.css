@@ -289,7 +289,8 @@
 }
 
 @media (max-width: 800px) {
-  .left-section-middle, .left-section-con {
+  .left-section-middle,
+  .left-section-con {
     flex-direction: column;
   }
   .Separator {

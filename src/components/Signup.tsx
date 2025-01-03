@@ -1,6 +1,6 @@
 import React from "react";
 import axios from "axios";
-import { useForm, SubmitHandler } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { Button } from "@/components/ui/button";
@@ -16,13 +16,6 @@ import {
 import { toast } from "@/hooks/use-toast";
 import { ToastAction } from "@/components/ui/toast";
 import { useNavigate } from "react-router-dom";
-
-type SignupFormValues = {
-  username: string;
-  gmail: string;
-  password: string;
-  confirm_password: string;
-};
 
 const formSchema = z
   .object({
@@ -44,8 +37,7 @@ const formSchema = z
 
 const Signup: React.FC = () => {
   const navigate = useNavigate();
-
-  const form = useForm<SignupFormValues>({
+  const form = useForm({
     resolver: zodResolver(formSchema),
     mode: "onChange",
     defaultValues: {
@@ -59,17 +51,14 @@ const Signup: React.FC = () => {
   const { watch, handleSubmit, control, formState } = form;
   const { errors } = formState;
 
-  const onSubmit: SubmitHandler<SignupFormValues> = async (values) => {
+  const onSubmit = async (values) => {
     try {
-      const response = await axios.post(
-        "https://amirabbasixi234.pythonanywhere.com/api/signup/",
-        {
-          username: values.username,
-          gmail: values.gmail,
-          password: values.password,
-          confirm_password: values.confirm_password,
-        },
-      );
+      const response = await axios.post("https://amirabbasixi234.pythonanywhere.com/api/signup/", {
+        username: values.username,
+        gmail: values.gmail,
+        password: values.password,
+        confirm_password: values.confirm_password,
+      });
 
       if (response.status === 201) {
         toast({
@@ -80,24 +69,15 @@ const Signup: React.FC = () => {
         });
         navigate("/login");
       }
-    } catch (error: unknown) {
-      if (axios.isAxiosError(error)) {
-        if (error.response) {
-          if (error.response.data.error) {
-            toast({
-              variant: "destructive",
-              title: "خطا در ثبت‌نام",
-              description: error.response.data.error,
-              action: <ToastAction altText="Try again">تلاش مجدد</ToastAction>,
-            });
-          } else {
-            toast({
-              variant: "destructive",
-              title: "خطا در ثبت‌نام",
-              description: "لطفاً دوباره تلاش کنید.",
-              action: <ToastAction altText="Try again">تلاش مجدد</ToastAction>,
-            });
-          }
+    } catch (error) {
+      if (error.response) {
+        if (error.response.data.error) {
+          toast({
+            variant: "destructive",
+            title: "خطا در ثبت‌نام",
+            description: error.response.data.error,
+            action: <ToastAction altText="Try again">تلاش مجدد</ToastAction>,
+          });
         } else {
           toast({
             variant: "destructive",
@@ -110,14 +90,14 @@ const Signup: React.FC = () => {
         toast({
           variant: "destructive",
           title: "خطا در ثبت‌نام",
-          description: "خطای غیرمنتظره‌ای رخ داده است.",
+          description: error.message,
           action: <ToastAction altText="Try again">تلاش مجدد</ToastAction>,
         });
       }
     }
   };
 
-  const getInputClass = (fieldName: keyof SignupFormValues) => {
+  const getInputClass = (fieldName) => {
     const isValid = !errors[fieldName] && watch(fieldName)?.length > 0;
     return `InputAuth ${isValid ? "border-2 border-[#087c58]" : ""}`;
   };
