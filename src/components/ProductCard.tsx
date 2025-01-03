@@ -35,7 +35,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
 
   return (
     <div className="flex flex-col items-center text-center justify-center border-x-[1px] p-3 h-[15rem]">
-      <img className="my-1" src={image || Icons.Edit} alt={title} />
+      <img className="my-1 w-auto h-[10vh]" src={image || Icons.Edit} alt={title} />
       <h1 className="text-sm my-1">{title}</h1>
       <h2 className={`text-xs my-1 ${statusClassName}`}>{statusText}</h2>
       <div className="flex flex-row justify-center items-center text-center my-3">
