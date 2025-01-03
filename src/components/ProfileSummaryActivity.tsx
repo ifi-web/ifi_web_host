@@ -18,7 +18,7 @@ export default function ProfileSummaryActivity() {
   const [products, setProducts] = useState<Product[]>([]);
 
   useEffect(() => {
-    fetch("http://localhost:8000/api/products/") // Fetch from the updated API endpoint
+    fetch("https://amirabbasixi234.pythonanywhere.com/api/products/") // Fetch from the updated API endpoint
       .then((response) => response.json())
       .then((data) => {
         setProducts(data); // Store the entire product list from the API

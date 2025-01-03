@@ -63,7 +63,7 @@ const Signup: React.FC = () => {
 
   const onSubmit: SubmitHandler<SignupFormValues> = async (values) => {
     try {
-      const response = await axios.post("http://localhost:8000/api/signup/", {
+      const response = await axios.post("https://amirabbasixi234.pythonanywhere.com/api/signup/", {
         username: values.username,
         gmail: values.gmail,
         password: values.password,

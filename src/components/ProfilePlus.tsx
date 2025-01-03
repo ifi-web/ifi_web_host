@@ -22,7 +22,7 @@ export default function ProfilePlus() {
   // Fetch the profile data from the API
   useEffect(() => {
     axios
-      .get("http://localhost:8000/api/profiles/")
+      .get("https://amirabbasixi234.pythonanywhere.com/api/profiles/")
       .then((response) => {
         setProfileData(response.data[0]); // Get the first profile from the array
         setLoading(false); // Stop loading once data is fetched
