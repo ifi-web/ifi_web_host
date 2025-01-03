@@ -220,8 +220,6 @@
   border: 1px solid #00945e;
 }
 
-/* Profile */
-
 .left-section-top,
 .left-section-middle,
 .left-section-bottom,
@@ -229,13 +227,12 @@
   background-color: var(--background-sc);
 }
 
-.PlusCard-Header {
+.PlusCard {
   background-image: url("@/assets/Frame 1.svg");
-  background-size: cover;
+  background-size: auto;
   background-position: center;
   background-repeat: no-repeat;
 }
-
 @media (min-width: 1024px) {
   .DrawerButton {
     display: none;

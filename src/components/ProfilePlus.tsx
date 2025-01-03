@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import ShinyPlusButton from "./ui/ShinyPlusButton";
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import { Progress } from "@/components/ui/progress";
 
 interface ArrowLeftIconProps {
   className?: string;
@@ -26,12 +27,27 @@ const ArrowLeftIcon: React.FC<ArrowLeftIconProps> = ({ className }) => {
 };
 interface PlusCardHeaderProps {
   isPremium: boolean;
+  // SubscriptionDate: string;    Caculate the date with progress and add for progres value={?}
+  // SubscriptionStart: string;
+  // SubscriptionEnd: string;
+  // Replace the Date with actual value {?}
 }
+
 const PlusCardHeader: React.FC<PlusCardHeaderProps> = ({ isPremium }) => {
   return (
-    <div className="flex flex-col justify-start items-start text-start px-10 py-4 border-[1px] rounded-lg">
+    <div className="PlusCard flex flex-col justify-start items-start text-start px-6 py-4 border-[1px] rounded-lg">
       {isPremium ? (
-        <h1 className="mb-4">اشتراک ویژه شما فعال است</h1>
+        <div className="">
+          <h1 className="mb-4">اشتراک ویژه شما فعال است</h1>
+          <h2 className="text-xs mb-2">روزهای باقی‌مانده : Date</h2>
+          <div className="w-full">
+            <Progress value={70} />
+          </div>
+          <div className="flex flex-row mt-3">
+            <h3 className="text-xs text-zinc-500 ml-5">شروع : Date</h3>
+            <h3 className="text-xs text-zinc-500">انقضا : Date</h3>
+          </div>
+        </div>
       ) : (
         <>
           <h1 className="mb-4">اشتراک فعال ندارید</h1>
@@ -51,7 +67,7 @@ interface ActivitySummaryProps {
 const ActivitySummary: React.FC<ActivitySummaryProps> = ({
   iconSrc,
   amount,
-  description,
+  description
 }) => {
   return (
     <div className="flex items-center text-start my-1">
@@ -107,7 +123,7 @@ export default function ProfilePlus() {
       setFetchError(null);
       try {
         const response = await axios.get(
-          "https://amirabbasixi234.pythonanywhere.com/api/profiles/",
+          "https://amirabbasixi234.pythonanywhere.com/api/profiles/"
         );
         if (response.data.length > 0) {
           setProfileData(response.data[0]);
