@@ -5,6 +5,7 @@ import ShinyPlusButton from "./ui/ShinyPlusButton";
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { Progress } from "@/components/ui/progress";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 
 interface ArrowLeftIconProps {
   className?: string;
@@ -142,11 +143,25 @@ export default function ProfilePlus() {
   }, []);
 
   if (isLoading) {
-    return <div>Loading...</div>;
+    return (
+      <div className="fixed inset-0 flex items-center justify-center backdrop-blur-lg">
+        <Alert className="w-fit">
+          <AlertTitle className="m-auto">در حال بارگیری...</AlertTitle>
+        </Alert>
+      </div>
+    );
   }
   if (fetchError) {
-    return <div className="text-red-500">{fetchError}</div>;
+    return (
+      <div className="fixed inset-0 flex items-center justify-center backdrop-blur-lg">
+        <Alert className="w-fit text-red-600">
+          <AlertTitle className="m-auto">خطا</AlertTitle>
+          <AlertDescription className="m-auto">{fetchError}</AlertDescription>
+        </Alert>
+      </div>
+    );
   }
+
   return (
     <div className="LeftGrid grid h-0 col-span-4 mx-4 ml-4">
       <div className="border-[1px] rounded-xl p-4 my-2">

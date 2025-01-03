@@ -18,6 +18,8 @@ import WalletAdd from "./wallet-add.svg";
 import FreeDelivery from "./free-delivery.svg";
 import ConvertCart from "./convert-card.svg";
 import History from "./history.svg";
+import Search from "./search-normal.svg";
+import Docu from "./document.svg";
 
 const Icons = {
   Bag,
@@ -39,7 +41,9 @@ const Icons = {
   WalletAdd,
   FreeDelivery,
   History,
-  ConvertCart
+  ConvertCart,
+  Search,
+  Docu
 };
 
 export default Icons;

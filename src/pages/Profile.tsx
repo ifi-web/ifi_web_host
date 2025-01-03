@@ -37,7 +37,6 @@ interface ProfileProps {
 }
 
 const ProfileLinks: React.FC<ProfileProps> = ({
-  // activeComponent,
   handleSummaryClick,
   handlePlusClick,
   handleOrdersClick
@@ -241,7 +240,7 @@ export default function Profile() {
 
         {activeComponent === "summary" && <ProfileSummaryActivity />}
         {activeComponent === "plus" && <ProfilePlus />}
-        {activeComponent === "plus" && <ProfileOrders />}
+        {activeComponent === "orders" && <ProfileOrders />}
       </div>
     </ScrollArea>
   );
