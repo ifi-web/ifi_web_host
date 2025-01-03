@@ -17,7 +17,6 @@ import { toast } from "@/hooks/use-toast";
 import { ToastAction } from "@/components/ui/toast";
 import { useNavigate } from "react-router-dom";
 
-// Define form values type
 type SignupFormValues = {
   username: string;
   gmail: string;
@@ -25,7 +24,6 @@ type SignupFormValues = {
   confirm_password: string;
 };
 
-// Define form schema with Zod
 const formSchema = z
   .object({
     username: z
@@ -63,12 +61,15 @@ const Signup: React.FC = () => {
 
   const onSubmit: SubmitHandler<SignupFormValues> = async (values) => {
     try {
-      const response = await axios.post("https://amirabbasixi234.pythonanywhere.com/api/signup/", {
-        username: values.username,
-        gmail: values.gmail,
-        password: values.password,
-        confirm_password: values.confirm_password,
-      });
+      const response = await axios.post(
+        "https://amirabbasixi234.pythonanywhere.com/api/signup/",
+        {
+          username: values.username,
+          gmail: values.gmail,
+          password: values.password,
+          confirm_password: values.confirm_password,
+        },
+      );
 
       if (response.status === 201) {
         toast({
@@ -80,7 +81,6 @@ const Signup: React.FC = () => {
         navigate("/login");
       }
     } catch (error: unknown) {
-      // Type narrowing: asserting that error is an Axios error
       if (axios.isAxiosError(error)) {
         if (error.response) {
           if (error.response.data.error) {

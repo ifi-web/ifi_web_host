@@ -47,15 +47,17 @@ export function InputOTPForm() {
 
     const handleSendCode = async () => {
       try {
-        await axios.post("https://amirabbasixi234.pythonanywhere.com/api/send-verification-code/", {
-          email,
-        });
+        await axios.post(
+          "https://amirabbasixi234.pythonanywhere.com/api/send-verification-code/",
+          {
+            email,
+          },
+        );
       } catch (error) {
-        // Fail silently
+        // nothing
       }
     };
 
-    // Automatically send the code when the component is mounted
     handleSendCode();
   }, [email]);
 
@@ -80,10 +82,13 @@ export function InputOTPForm() {
   const onSubmit = async (data: z.infer<typeof FormSchema>) => {
     setLoading(true);
     try {
-      await axios.post("https://amirabbasixi234.pythonanywhere.com/api/verify-code/", {
-        email,
-        code: data.pin,
-      });
+      await axios.post(
+        "https://amirabbasixi234.pythonanywhere.com/api/verify-code/",
+        {
+          email,
+          code: data.pin,
+        },
+      );
       setIsSubmitted(true);
       toast({
         variant: "default",
@@ -92,7 +97,6 @@ export function InputOTPForm() {
         action: <ToastAction altText="Try again">باشه</ToastAction>,
       });
     } catch (error) {
-      // Handle submission failure if necessary
     } finally {
       setLoading(false);
     }

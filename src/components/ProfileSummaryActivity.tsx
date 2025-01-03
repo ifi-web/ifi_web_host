@@ -9,26 +9,25 @@ interface Product {
   title: string;
   image: string;
   price: number;
-  description: string; // Add this line to define 'description'
-  warehouse_status: "in_stock" | "limited" | "out_of_stock"; // Correctly typed warehouse_status
-  cart: any[]; // Adjust the type based on the structure of the cart
+  description: string;
+  warehouse_status: "in_stock" | "limited" | "out_of_stock";
+  cart: any[];
 }
 
 export default function ProfileSummaryActivity() {
   const [products, setProducts] = useState<Product[]>([]);
 
   useEffect(() => {
-    fetch("https://amirabbasixi234.pythonanywhere.com/api/products/") // Fetch from the updated API endpoint
+    fetch("https://amirabbasixi234.pythonanywhere.com/api/products/")
       .then((response) => response.json())
       .then((data) => {
-        setProducts(data); // Store the entire product list from the API
+        setProducts(data);
       })
       .catch((error) => console.error("Error fetching products:", error));
   }, []);
 
   return (
     <div className="LeftGrid grid grid-rows-1 col-span-4 mx-4 ml-4">
-      {/* Orders Section */}
       <div className="left-section-top border-[1px] rounded-xl p-4 my-2">
         <div className="flex justify-between">
           <h1 className="flex px-1">سفارش‌های من</h1>
@@ -75,7 +74,6 @@ export default function ProfileSummaryActivity() {
         </div>
       </div>
 
-      {/* User List Section */}
       <div className="left-section-middle flex flex-col border-[1px] rounded-xl p-4 my-2">
         <h1 className="px-1">از لیست‌های شما</h1>
         <ScrollArea dir="rtl" className="w-full mt-3 whitespace-nowrap pb-3">
@@ -86,7 +84,7 @@ export default function ProfileSummaryActivity() {
                 title={product.title}
                 image={product.image}
                 price={product.price}
-                warehouseStatus={product.warehouse_status} // Directly use warehouse_status from API
+                warehouseStatus={product.warehouse_status}
               />
             ))}
           </div>
@@ -94,7 +92,6 @@ export default function ProfileSummaryActivity() {
         </ScrollArea>
       </div>
 
-      {/* Frequent Purchases Section (Empty) */}
       <div className="left-section-bottom flex flex-col border-[1px] rounded-xl p-4 my-2">
         خریدهای پرتکرار شما
         <ScrollArea dir="rtl" className="w-full mt-3 whitespace-nowrap pb-3">

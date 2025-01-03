@@ -19,7 +19,6 @@ import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "./AuthContext";
 import Cookies from "js-cookie";
 
-// Define schema using Zod
 const formSchema = z.object({
   username: z
     .string()
@@ -31,16 +30,14 @@ const formSchema = z.object({
     .max(50),
 });
 
-// Define the type for the form values
 type FormValues = z.infer<typeof formSchema>;
 
 const Login: React.FC = () => {
   const navigate = useNavigate();
   const authContext = useAuth();
 
-  // Handle case where context is null
   if (!authContext) {
-    return <div>Loading...</div>; // or some other fallback
+    return <div>Loading...</div>;
   }
 
   const { setUser } = authContext;
@@ -55,10 +52,13 @@ const Login: React.FC = () => {
 
   const onSubmit = async (values: FormValues) => {
     try {
-      const response = await axios.post("https://amirabbasixi234.pythonanywhere.com/api/login/", {
-        username: values.username,
-        password: values.password,
-      });
+      const response = await axios.post(
+        "https://amirabbasixi234.pythonanywhere.com/api/login/",
+        {
+          username: values.username,
+          password: values.password,
+        },
+      );
 
       if (response.status === 200) {
         const userData = response.data;

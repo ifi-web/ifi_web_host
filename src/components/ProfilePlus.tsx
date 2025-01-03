@@ -3,9 +3,8 @@ import Icons from "@/assets/Icons/Index";
 import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
 import ShinyPlusButton from "./ui/ShinyPlusButton";
-import axios from "axios"; // For making API requests
+import axios from "axios";
 
-// Define the type for the profile data
 interface ProfileData {
   is_premium: boolean;
   wallet_balance: number;
@@ -13,19 +12,16 @@ interface ProfileData {
 }
 
 export default function ProfilePlus() {
-  // State to store profile data with defined type
   const [profileData, setProfileData] = useState<ProfileData | null>(null);
 
-  // State to track loading state
   const [loading, setLoading] = useState(true);
 
-  // Fetch the profile data from the API
   useEffect(() => {
     axios
       .get("https://amirabbasixi234.pythonanywhere.com/api/profiles/")
       .then((response) => {
-        setProfileData(response.data[0]); // Get the first profile from the array
-        setLoading(false); // Stop loading once data is fetched
+        setProfileData(response.data[0]);
+        setLoading(false);
       })
       .catch((error) => {
         console.error("Error fetching profile data:", error);
@@ -33,11 +29,10 @@ export default function ProfilePlus() {
       });
   }, []);
 
-  // Check if profileData is loaded and contains premium status
   const isPremium = profileData ? profileData.is_premium : false;
 
   if (loading) {
-    return <div>Loading...</div>; // Show loading text while data is being fetched
+    return <div>Loading...</div>;
   }
 
   return (
@@ -62,7 +57,6 @@ export default function ProfilePlus() {
 
       <h1 className="my-3">جمع‌بندی فعالیت‌های شما در پلاس تا کنون</h1>
       <div className="left-section-middle flex flex-col border-[1px] rounded-xl p-4 my-2 mb-10">
-        {/* You can check the premium status and show data accordingly */}
         <div className="left-section-con flex flex-row">
           <div className="left-section-content flex items-center text-start my-1">
             <img
