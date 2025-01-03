@@ -30,10 +30,19 @@ const formSchema = z.object({
     .max(50),
 });
 
+type FormValues = z.infer<typeof formSchema>;
+
 const Login: React.FC = () => {
   const navigate = useNavigate();
-  const { setUser } = useAuth();
-  const form = useForm({
+  const authContext = useAuth();
+
+  if (!authContext) {
+    return <div>Loading...</div>;
+  }
+
+  const { setUser } = authContext;
+
+  const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       username: "",
@@ -41,12 +50,15 @@ const Login: React.FC = () => {
     },
   });
 
-  const onSubmit = async (values) => {
+  const onSubmit = async (values: FormValues) => {
     try {
-      const response = await axios.post("https://amirabbasixi234.pythonanywhere.com/api/login/", {
-        username: values.username,
-        password: values.password,
-      });
+      const response = await axios.post(
+        "https://amirabbasixi234.pythonanywhere.com/api/login/",
+        {
+          username: values.username,
+          password: values.password,
+        },
+      );
 
       if (response.status === 200) {
         const userData = response.data;

@@ -35,9 +35,9 @@ interface ProfileProps {
 }
 
 const ProfileLinks: React.FC<ProfileProps> = ({
-  activeComponent,
+  // activeComponent,
   handleSummaryClick,
-  handlePlusClick
+  handlePlusClick,
 }) => (
   <div className="Links flex flex-col justify-start items-start -mr-3">
     <Button variant="link" className="my-1" onClick={handleSummaryClick}>
@@ -113,12 +113,12 @@ export default function Profile() {
     axios
       .get("https://amirabbasixi234.pythonanywhere.com/api/profiles/", {
         headers: {
-          Authorization: `Bearer ${user.token}`
-        }
+          Authorization: `Bearer ${user.token}`,
+        },
       })
       .then((response) => {
         const userProfile = response.data.find(
-          (profile: User) => profile.username === user.username
+          (profile: User) => profile.username === user.username,
         );
         setProfile(userProfile);
       })
@@ -126,7 +126,7 @@ export default function Profile() {
         console.error(
           "Error fetching profile data:",
           error.message,
-          error?.response?.status
+          error?.response?.status,
         );
       });
   }, [user]);
