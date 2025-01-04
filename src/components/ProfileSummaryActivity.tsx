@@ -51,7 +51,7 @@ function SummaryCard({
   thirdIconSrc,
   currentOrdersStatus,
   returnedOrdersStatus,
-  deliveredOrdersStatus
+  deliveredOrdersStatus,
 }: SummaryCardProps) {
   return (
     <div className="border-[1px] rounded-xl p-4 my-2">
